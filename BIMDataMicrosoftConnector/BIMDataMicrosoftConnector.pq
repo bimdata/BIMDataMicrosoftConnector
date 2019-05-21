@@ -17,13 +17,6 @@ shared BIMDataConnector.Contents = () =>
     in
         access_token; 
 
-
-shared BIMDataConnector.Raw = (_url as text) as text =>
-let
-    access_token = Extension.CurrentCredential()[access_token]
-in
-    access_token;
-
 // Data Source Kind description
 BIMDataConnector = [
     TestConnection = (dataSourcePath) => { "BIMDataConnector.Contents", dataSourcePath },
