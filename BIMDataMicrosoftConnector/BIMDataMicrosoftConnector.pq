@@ -13,7 +13,7 @@ scopes = "bcf:read check:read cloud:read document:read ifc:read org:read user:re
 shared BIMDataConnector.Contents = () =>
     let
         source = Json.Document(Web.Contents("https://api-staging.bimdata.io/cloud")),
-        access_token = Extension.CurrentCredential()[access_token]
+        access_token = Table.FromList(Lines.FromText((Extension.CurrentCredential()[access_token])), null, {"access_token"})
     in
         access_token; 
 
