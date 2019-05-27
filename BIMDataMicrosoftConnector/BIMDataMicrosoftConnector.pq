@@ -14,7 +14,7 @@ shared BIMDataMicrosoftConnector.RefreshToken = () =>
     let
         result = Json.Document(Web.Contents("https://api-staging.bimdata.io/cloud"))
     in
-        null; 
+        result; 
 
 [DataSource.Kind="BIMDataMicrosoftConnector", Publish="BIMDataMicrosoftConnector.Publish"]
 shared BIMDataMicrosoftConnector.GetToken = () =>
