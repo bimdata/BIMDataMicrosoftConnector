@@ -10,7 +10,14 @@ scope_prefix = "";
 scopes = "bcf:read bcf:write check:read check:write webhook:manage ifc:read ifc:write cloud:read cloud:manage org:manage document:read document:write user:read openid profile email";
 
 [DataSource.Kind="BIMDataMicrosoftConnector", Publish="BIMDataMicrosoftConnector.Publish"]
-shared BIMDataMicrosoftConnector.Contents = () =>
+shared BIMDataMicrosoftConnector.RefreshToken = () =>
+    let
+        result = Json.Document(Web.Contents("https://api-staging.bimdata.io/cloud"))
+    in
+        null; 
+
+[DataSource.Kind="BIMDataMicrosoftConnector", Publish="BIMDataMicrosoftConnector.Publish"]
+shared BIMDataMicrosoftConnector.GetToken = () =>
     let
         access_token = Table.FromList(Lines.FromText((Extension.CurrentCredential()[access_token])), null, {"access_token"})
     in
