@@ -2,6 +2,7 @@
 section BIMDataMicrosoftConnector;
 
 client_id = "710475";
+client_secret = "1d2418b086b670cbbf5516b8af98121476abfe983cd1e167e8364669";
 redirect_uri = "http://www.lewifi.fr/";
 token_uri = "https://login-staging.bimdata.io/token";
 authorize_uri = "https://login-staging.bimdata.io/authorize";
@@ -55,7 +56,8 @@ StartLogin = (resourceUrl, state, display) =>
     let
         authorizeUrl = authorize_uri & "?" & Uri.BuildQueryString([
             response_type = "id_token token",
-            client_id = client_id,  
+            client_id = client_id,
+            client_secret = client_secret,
             redirect_uri = redirect_uri,
             state = state,
             scope = scopes,
