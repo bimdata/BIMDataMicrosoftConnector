@@ -20,7 +20,7 @@ shared BIMDataMicrosoftConnector.RefreshToken = () =>
 [DataSource.Kind="BIMDataMicrosoftConnector", Publish="BIMDataMicrosoftConnector.Publish"]
 shared BIMDataMicrosoftConnector.GetToken = () =>
     let
-        access_token = Table.FromList(Lines.FromText((Extension.CurrentCredential()[access_token])), null, {"access_token"})
+        access_token = Extension.CurrentCredential()[access_token]
     in
         access_token; 
 
