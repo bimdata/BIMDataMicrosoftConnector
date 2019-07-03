@@ -1,18 +1,21 @@
 ﻿// This file contains your Data Connector logic
 section BIMDataMicrosoftConnector;
 
-client_id = "710475";
-client_secret = "1d2418b086b670cbbf5516b8af98121476abfe983cd1e167e8364669";
-redirect_uri = "http://www.lewifi.fr/";
-token_uri = "https://login-staging.bimdata.io/token";
-authorize_uri = "https://login-staging.bimdata.io/authorize";
+client_id = "";
+client_secret = "";
+redirect_uri = "";
+authorize_uri = "";
+token_uri = "";
+
+env = "";
 
 scope_prefix = "";
 scopes = "bcf:read bcf:write check:read check:write webhook:manage ifc:read ifc:write cloud:read cloud:manage org:manage document:read document:write user:read openid profile email";
 
 [DataSource.Kind="BIMDataMicrosoftConnector", Publish="BIMDataMicrosoftConnector.Publish"]
-shared BIMDataMicrosoftConnector.RefreshToken = () =>
+shared BIMDataMicrosoftConnector.RefreshToken = (chosenEnv as text) =>
     let
+        env = chosenEnv,
         result = Json.Document(Web.Contents("https://api-staging.bimdata.io/cloud"))
     in
         result; 
@@ -26,7 +29,7 @@ shared BIMDataMicrosoftConnector.GetToken = () =>
 
 // Data Source Kind description
 BIMDataMicrosoftConnector = [
-    TestConnection = (dataSourcePath) => { "BIMDataMicrosoftConnector.Contents", dataSourcePath },
+    TestConnection = (dataSourcePath) => { "BIMDataMicrosoftConnector.RefreshToken", dataSourcePath },
     Authentication = [
     Implicit = [],
         OAuth = [
@@ -51,6 +54,45 @@ BIMDataMicrosoftConnector.Icons = [
     Icon16 = { Extension.Contents("BIMDataMicrosoftConnector16.png"), Extension.Contents("BIMDataMicrosoftConnector20.png"), Extension.Contents("BIMDataMicrosoftConnector24.png"), Extension.Contents("BIMDataMicrosoftConnector32.png") },
     Icon32 = { Extension.Contents("BIMDataMicrosoftConnector32.png"), Extension.Contents("BIMDataMicrosoftConnector40.png"), Extension.Contents("BIMDataMicrosoftConnector48.png"), Extension.Contents("BIMDataMicrosoftConnector64.png") }
 ];
+
+defineEnv = (chosenEnv) =>
+    if [chosenEnv] = "staging" then
+        defineStaging()
+    else if [chosenEnv] = "next" then
+        defineNext()
+    else
+        defineBeta();
+
+
+defineStaging = () =>
+    let
+        client_id = "710475",
+        client_secret = "1d2418b086b670cbbf5516b8af98121476abfe983cd1e167e8364669",
+        redirect_uri = "http://www.lewifi.fr/",
+        token_uri = "https://login-staging.bimdata.io/token",
+        authorize_uri = "https://login-staging.bimdata.io/authorize"
+    in
+        client_id;
+
+defineNext = () =>
+    let
+        client_id = "710475",
+        client_secret = "121abb78359021b9c3ba209efed188e4001e3bb896e5fb40d12a82c3",
+        redirect_uri = "http://www.lewifi.fr/",
+        token_uri = "https://connect-next.bimdata.io/token",
+        authorize_uri = "https://connect-next.bimdata.io/authorize"
+    in
+        client_id;
+
+defineBeta = () =>
+    let
+        client_id = "677587",
+        client_secret = "62a72451c9daf0b173189047751488b6f6eab415fc91b843b1918d18",
+        redirect_uri = "http://www.lewifi.fr/",
+        token_uri = "https://connect.bimdata.io/token",
+        authorize_uri = "https://connect.bimdata.io/authorize"
+    in
+        client_id;
 
 StartLogin = (resourceUrl, state, display) =>
     let
