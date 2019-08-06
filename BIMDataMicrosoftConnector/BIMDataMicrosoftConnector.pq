@@ -1,11 +1,11 @@
 ﻿// This file contains your Data Connector logic
 section BIMDataMicrosoftConnector;
 
-client_id = "710475";
-client_secret = "1d2418b086b670cbbf5516b8af98121476abfe983cd1e167e8364669";
+client_id = "342706";
+client_secret = "6ff5b49d305b3e4c2ecd852dd4121b7803c62255706581f8eec32294";
 redirect_uri = "http://www.lewifi.fr/";
-token_uri = "https://login-staging.bimdata.io/token";
-authorize_uri = "https://login-staging.bimdata.io/authorize";
+token_uri = "https://connect.bimdata.io/token";
+authorize_uri = "https://connect.bimdata.io/authorize";
 
 scope_prefix = "";
 scopes = "bcf:read bcf:write check:read check:write webhook:manage ifc:read ifc:write cloud:read cloud:manage org:manage document:read document:write user:read openid profile email";
@@ -13,7 +13,7 @@ scopes = "bcf:read bcf:write check:read check:write webhook:manage ifc:read ifc:
 [DataSource.Kind="BIMDataMicrosoftConnector", Publish="BIMDataMicrosoftConnector.Publish"]
 shared BIMDataMicrosoftConnector.RefreshToken = () =>
     let
-        result = Json.Document(Web.Contents("https://api-staging.bimdata.io/cloud"))
+        result = Json.Document(Web.Contents("https://api-beta.bimdata.io/cloud"))
     in
         result; 
 
