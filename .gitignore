@@ -1,6 +1,3 @@
-BIMDataConnector/bin/
-BIMDataConnector/obj/
-
-BIMDataMicrosoftConnector/bin/
-
-BIMDataMicrosoftConnector/obj/
+bin/
+obj/
+.vs/
