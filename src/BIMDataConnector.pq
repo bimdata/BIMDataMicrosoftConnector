@@ -21,7 +21,7 @@ shared BIMDataConnector.RefreshToken = () =>
     in
         result; 
 
-[DataSource.Kind="BIMDataConnector", Publish="BIMDataConnector.Publish"]
+
 shared BIMDataConnector.GetToken = () =>
     let
         access_token = Extension.CurrentCredential()[access_token]
