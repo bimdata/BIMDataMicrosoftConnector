@@ -1,5 +1,5 @@
 ﻿// Use this file to write queries to test your data connector
 let
-    result = BIMDataConnector.RefreshToken()
+    result = BIMDataConnector.GetToken()
 in
     result

@@ -10,7 +10,3 @@ And:
 
 
 This connector uses OpenId Connect with authentication flow with PKCE. 
-
-# TODO List:
-- Hack the Refresh method to silently renew the access token (see https://github.com/Microsoft/DataConnectors/blob/master/docs/m-extensions.md#implementing-an-oauth-flow)
-- Check if On-Premise Gateway (https://powerbi.microsoft.com/en-us/blog/on-premises-data-gateway-july-update-is-now-available/) could be an interesting solution

@@ -8,33 +8,28 @@ authorize_uri = "https://iam.bimdata.io/auth/realms/bimdata/protocol/openid-conn
 
 scopes = "bcf:read ifc:read cloud:read document:read user:read openid profile email";
 
-code_verifier =  Text.Combine({Text.Replace(Text.NewGuid(), "-", ""), Text.Replace(Text.NewGuid(), "-", ""), Text.Replace(Text.NewGuid(), "-", "")});
 
-code_hash = Binary.ToText(Crypto.CreateHash(CryptoAlgorithm.SHA256, Text.ToBinary(code_verifier, TextEncoding.Ascii)), BinaryEncoding.Base64);
-code_challenge =  Text.Replace(Text.Replace(Text.Replace(code_hash, "=", ""), "+", "-"), "/", "_");
-
-
-[DataSource.Kind="BIMDataConnector", Publish="BIMDataConnector.Publish"]
-shared BIMDataConnector.RefreshToken = () =>
+shared BIMDataConnector.TestConnection = () =>
     let
         result = Json.Document(Web.Contents("https://api-beta.bimdata.io/user"))
     in
         result; 
 
-
+[DataSource.Kind="BIMDataConnector", Publish="BIMDataConnector.Publish"]
 shared BIMDataConnector.GetToken = () =>
     let
-        access_token = Extension.CurrentCredential()[access_token]
+        access_token = Extension.CurrentCredential(true)[access_token]
     in
         access_token; 
 
 // Data Source Kind description
 BIMDataConnector = [
-    TestConnection = (dataSourcePath) => { "BIMDataConnector.RefreshToken", dataSourcePath },
+    TestConnection = (dataSourcePath) => { "BIMDataConnector.TestConnection", dataSourcePath },
     Authentication = [
         OAuth = [
             StartLogin=StartLogin,
             FinishLogin=FinishLogin,
+            Refresh=Refresh,
             Label="BIMData Connect"
         ]
     ],
@@ -58,6 +53,10 @@ BIMDataConnector.Icons = [
 
 StartLogin = (resourceUrl, state, display) =>
     let
+        code_verifier =  Text.Combine({Text.Replace(Text.NewGuid(), "-", ""), Text.Replace(Text.NewGuid(), "-", ""), Text.Replace(Text.NewGuid(), "-", "")}),
+        code_hash = Binary.ToText(Crypto.CreateHash(CryptoAlgorithm.SHA256, Text.ToBinary(code_verifier, TextEncoding.Ascii)), BinaryEncoding.Base64),
+        code_challenge =  Text.Replace(Text.Replace(Text.Replace(code_hash, "=", ""), "+", "-"), "/", "_"),
+
         authorizeUrl = authorize_uri & "?" & Uri.BuildQueryString([
             response_type = "code",
             client_id = client_id,
@@ -75,24 +74,51 @@ StartLogin = (resourceUrl, state, display) =>
             CallbackUri = redirect_uri,
             WindowHeight = 1024,
             WindowWidth = 1280,
-            Context = null
+            Context = [
+                CodeVerifier = code_verifier
+            ]
         ];
 
 FinishLogin = (context, callbackUri, state) =>
     let
-        Parts = Uri.Parts(callbackUri)[Query]
+        parts = Uri.Parts(callbackUri)[Query],
+        result = if (Record.HasFields(parts, {"error", "error_description"})) then 
+                    error Error.Record(parts[error], parts[error_description], parts)
+                 else
+                    TokenMethod(context, parts[code])
     in
-       TokenMethod(Parts[code]);
+        result;
 
-TokenMethod = (code) =>
+
+TokenMethod = (context, code) =>
     let
         Response = Web.Contents(token_uri, [
             Content = Text.ToBinary(Uri.BuildQueryString([
                 client_id = client_id,
-                code_verifier = code_verifier,
+                code_verifier = context[CodeVerifier],
                 code = code,
                 redirect_uri = redirect_uri,
                 grant_type = "authorization_code"
+            ])),
+            Headers=[#"Content-type" = "application/x-www-form-urlencoded",#"Accept" = "application/json"],
+            ManualStatusHandling = {400} 
+        ]),
+        body = Json.Document(Response),
+        result = if (Record.HasFields(body, {"error", "error_description"})) then 
+            error Error.Record(body[error], body[error_description], body)
+         else
+            body
+    in
+        result;
+
+
+Refresh = (resourceUrl, refresh_token) =>  
+    let
+        Response = Web.Contents(token_uri, [
+            Content = Text.ToBinary(Uri.BuildQueryString([
+                client_id = client_id,
+                grant_type = "refresh_token",
+                refresh_token = refresh_token
             ])),
             Headers=[#"Content-type" = "application/x-www-form-urlencoded",#"Accept" = "application/json"],
             ManualStatusHandling = {400} 
