@@ -1,5 +1,5 @@
-﻿// This file contains your Data Connector logic
-section BIMDataConnector;
+﻿// This file contains your Data  logic
+section BIMData.io;
 
 client_id = "ddb249a8-82a6-4036-a8dc-5a922cd94d2f";
 redirect_uri = "https://powerbi.bimdata.io";
@@ -9,22 +9,22 @@ authorize_uri = "https://iam.bimdata.io/auth/realms/bimdata/protocol/openid-conn
 scopes = "bcf:read ifc:read cloud:read document:read user:read openid profile email";
 
 
-shared BIMDataConnector.TestConnection = () =>
+shared BIMData.TestConnection = () =>
     let
         result = Json.Document(Web.Contents("https://api-beta.bimdata.io/user"))
     in
         result; 
 
-[DataSource.Kind="BIMDataConnector", Publish="BIMDataConnector.Publish"]
-shared BIMDataConnector.GetToken = () =>
+[DataSource.Kind="BIMData", Publish="BIMData.Publish"]
+shared BIMData.GetToken = () =>
     let
         access_token = Extension.CurrentCredential(true)[access_token]
     in
         access_token; 
 
 // Data Source Kind description
-BIMDataConnector = [
-    TestConnection = (dataSourcePath) => { "BIMDataConnector.TestConnection", dataSourcePath },
+BIMData = [
+    TestConnection = (dataSourcePath) => { "BIMData.TestConnection", dataSourcePath },
     Authentication = [
         OAuth = [
             StartLogin=StartLogin,
@@ -37,18 +37,18 @@ BIMDataConnector = [
 ];
 
 // Data Source UI publishing description
-BIMDataConnector.Publish = [
+BIMData.Publish = [
     Beta = true,
     Category = "Other",
     ButtonText = { Extension.LoadString("ButtonTitle"), Extension.LoadString("ButtonHelp") },
     LearnMoreUrl = "https://powerbi.bimdata.io/",
-    SourceImage = BIMDataConnector.Icons,
-    SourceTypeImage = BIMDataConnector.Icons
+    SourceImage = BIMData.Icons,
+    SourceTypeImage = BIMData.Icons
 ];
 
-BIMDataConnector.Icons = [
-    Icon16 = { Extension.Contents("BIMDataConnector16.png"), Extension.Contents("BIMDataConnector20.png"), Extension.Contents("BIMDataConnector24.png"), Extension.Contents("BIMDataConnector32.png") },
-    Icon32 = { Extension.Contents("BIMDataConnector32.png"), Extension.Contents("BIMDataConnector40.png"), Extension.Contents("BIMDataConnector48.png"), Extension.Contents("BIMDataConnector64.png") }
+BIMData.Icons = [
+    Icon16 = { Extension.Contents("BIMData16.png"), Extension.Contents("BIMData20.png"), Extension.Contents("BIMData24.png"), Extension.Contents("BIMData32.png") },
+    Icon32 = { Extension.Contents("BIMData32.png"), Extension.Contents("BIMData40.png"), Extension.Contents("BIMData48.png"), Extension.Contents("BIMData64.png") }
 ];
 
 StartLogin = (resourceUrl, state, display) =>

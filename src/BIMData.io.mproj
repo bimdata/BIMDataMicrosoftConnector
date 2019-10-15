@@ -19,7 +19,7 @@
     <SuppressCellErrors>False</SuppressCellErrors>
     <MaxRows>1000</MaxRows>
     <ExtensionProject>Yes</ExtensionProject>
-    <Name>BIMDataConnector</Name>
+    <Name>BIMData.io</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>false</DebugSymbols>
@@ -37,37 +37,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BIMDataConnector.pq">
+    <Compile Include="BIMData.pq">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BIMDataConnector16.png">
+    <Compile Include="BIMData16.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BIMDataConnector20.png">
+    <Compile Include="BIMData20.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BIMDataConnector24.png">
+    <Compile Include="BIMData24.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BIMDataConnector32.png">
+    <Compile Include="BIMData32.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BIMDataConnector40.png">
+    <Compile Include="BIMData40.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BIMDataConnector48.png">
+    <Compile Include="BIMData48.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BIMDataConnector64.png">
+    <Compile Include="BIMData64.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BIMDataConnector80.png">
+    <Compile Include="BIMData80.png">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="resources.resx">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="BIMDataConnector.query.pq">
+    <Content Include="BIMData.query.pq">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
